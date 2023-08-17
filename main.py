@@ -1,12 +1,11 @@
 import pygame 
 import math
-import time
-import mesh_lib
+import player
 pygame.init()
 
-canvas = pygame.display.set_mode((256, 224), pygame.SCALED, vsync=0)
+canvas = pygame.display.set_mode((256, 224), pygame.SCALED, vsync=1)
 refresh = pygame.time.Clock()
-refresh_rate = 20
+refresh_rate = 60
 background = pygame.image.load("Corneria.png")
 background_x, background_y = 0, -248
 
@@ -15,6 +14,9 @@ viewport_rot = [0, 0, 0]
 viewport_width = 1
 viewport_height = canvas.get_height()/canvas.get_width()
 viewport_distance = 1
+
+def find_distance(x, y, z):
+    return math.sqrt(x **2 + z ** 2 + y ** 2)
 
 def scale_to_canvas(x, y):
     #Scale points from 3D coordintates to fit on canvas.
@@ -61,8 +63,9 @@ def sort_triangles(triangle_list):
                 triangle_list[j] = cache
 
         passes += 1
+
 #Initialize game objects:
-arwing = mesh_lib.arwing(0, 0, 10)
+player = player.player()
 
 #Start the main loop:
 main_loop = True
@@ -73,36 +76,13 @@ while main_loop:
 
     key_state = pygame.key.get_pressed()
     delta_time = refresh.tick(refresh_rate)/1000
-    if key_state[pygame.K_q]:
-        main_loop = False
 
-    if key_state[pygame.K_w]:
-        arwing.transform([0, 0, -5], delta_time)
-
-    if key_state[pygame.K_s]:
-        arwing.transform([0, 0, 5], delta_time)
-
-    if key_state[pygame.K_a]:
-        arwing.transform([5, 0, 0], delta_time)
-
-    if key_state[pygame.K_d]:
-        arwing.transform([-5, 0, 0], delta_time)
-
-    if key_state[pygame.K_UP]:
-        arwing.transform([0, -5, 0], delta_time)
-
-    if key_state[pygame.K_DOWN]:
-        arwing.transform([0, 5, 0], delta_time)
-
-    if key_state[pygame.K_RIGHT]:
-        arwing.rotate_global([0, -1, 0], delta_time)
-
-    if key_state[pygame.K_LEFT]:
-        arwing.rotate_global([0, 1, 0], delta_time)
+    player.update(pygame, key_state, delta_time)
+    print(player.x)
 
     #Clear render layers:
     render_layer1 = []
-    render_layer1 += arwing.render()
+    render_layer1 += player.render()
 
     #Perform layer functions:
     sort_triangles(render_layer1)
