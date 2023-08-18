@@ -78,7 +78,6 @@ while main_loop:
     delta_time = refresh.tick(refresh_rate)/1000
 
     player.update(pygame, key_state, delta_time)
-    print(player.x)
 
     #Clear render layers:
     render_layer1 = []
