@@ -90,8 +90,6 @@ class arwing():
 
             self.eng_acc *= -1
 
-        print(self.eng_clr)
-
     def render(self):
         self.ren_verts = copy.deepcopy(self.upd_verts)#Grab the updated vertices to edit for rendering.
         self.aperature = 1
